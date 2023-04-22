@@ -1,12 +1,17 @@
+
+const fs = require("fs")
 class ProductManager {
 	#id = 0;  //privado
 
 	constructor() {
 		this.products = [];
+		const path = fs.promises.writeFile(this.path)   //verificar  getProduct
+		 //verificar fileProducts = fs.writeFileSync("./products.js", this.products)
 	}
 
 	getProducts() {
-		return this.products;
+		const getProduct = fs.promises.readFile("./Products.json", "utf-8") //verificar const getProduct = fs.readFileSync("./products.js", "utf-8")
+		return(getProduct)
 	}
 
 	addProduct(Title, Description, Price, Thumbnail, Code, Stock) {
@@ -32,6 +37,8 @@ class ProductManager {
 			console.log("ERROR: Debes completar los campos requeridos");
 			return;
 		} this.products.push(product);  // Agrego el producto a la lista de productos
+
+		const pasarProductos = fs.promises.writeFile("products.json", this.products)
 	}
 
 	
@@ -49,11 +56,38 @@ class ProductManager {
             console.log(seeID);  
         }
     }
+
+	/*REVISAR ESTOOOOOOOOOOOOOOOOOOOOOOOOOOO */
+
+	
+	upDateProduct(idDelProducto, campoAActualizar){
+
+	}
+	changeValue = (valor) => {
+		product = {...product, valor}
+		return console.log(product);
+	}
+	
 }
+changeValue({"Title": "bolsa de boxeo"})
+
+//REVISAR ESTO SI O SI
+
+deleteProduct(idEliminarProducto);{
+    const encontrarId = this.products.find((product) => product.id === idEliminarProducto)
+        if (productindex === -1) {
+            console.log("not found"); 
+            return;
+        } else {
+            fs.promises.unlink(product);  
+        }
+}
+
+
 
 //PRUEBAS
 const productManager = new ProductManager();
 productManager.addProduct('proteina mag', 'proteina en polvo', 5000, "./img/proteina_mag.png", 30, 10);
 productManager.addProduct('creatina gold',"100% pura", 6000, "./img/creatina_gold.png", 10, 200);
-productManager.getProductById(9);  //pongo un id que no existe para que aparezca "not found"
+productManager.getProductById(1);  //pongo un id que no existe para que aparezca "not found"
 console.log(productManager.getProducts());

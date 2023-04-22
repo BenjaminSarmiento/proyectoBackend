@@ -5,12 +5,12 @@ class ProductManager {
 
 	constructor() {
 		this.products = [];
-		const path = fs.promises.writeFile(this.path)   //verificar  getProduct
-		 //verificar fileProducts = fs.writeFileSync("./products.js", this.products)
+		const path = fs.promises.writeFile(this.path) 
+		 
 	}
 
 	getProducts() {
-		const getProduct = fs.promises.readFile("./Products.json", "utf-8") //verificar const getProduct = fs.readFileSync("./products.js", "utf-8")
+		const getProduct = fs.promises.readFile("./Products.json", "utf-8") 
 		return(getProduct)
 	}
 
@@ -57,7 +57,7 @@ class ProductManager {
         }
     }
 
-	/*REVISAR ESTOOOOOOOOOOOOOOOOOOOOOOOOOOO */
+	
 
 	
 	upDateProduct(idDelProducto, campoAActualizar){
@@ -71,7 +71,7 @@ class ProductManager {
 }
 changeValue({"Title": "bolsa de boxeo"})
 
-//REVISAR ESTO SI O SI
+
 
 deleteProduct(idEliminarProducto);{
     const encontrarId = this.products.find((product) => product.id === idEliminarProducto)

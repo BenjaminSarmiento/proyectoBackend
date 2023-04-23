@@ -6,7 +6,6 @@ class ProductManager {
 	constructor() {
 		this.products = [];
 		const path = fs.promises.writeFile(this.path) 
-		 
 	}
 
 	getProducts() {
@@ -60,22 +59,28 @@ class ProductManager {
 	
 
 	
-	upDateProduct(idDelProducto, campoAActualizar){
-
+	upDateProduct(idDelProducto, campoAActualizar, valorNuevo){
+		const buscarId = this.products.find((product) => product.id === idDelProducto)
+		console.log(buscarId);
+		product.campoAActualizar = valorNuevo
 	}
-	changeValue = (valor) => {
+
+	
+
+
+	/*changeValue = (valor) => {
 		product = {...product, valor}
 		return console.log(product);
 	}
 	
 }
-changeValue({"Title": "bolsa de boxeo"})
+changeValue({"Title": "bolsa de boxeo"})*/
 
 
 
-deleteProduct(idEliminarProducto);{
+deleteProduct(idEliminarProducto){
     const encontrarId = this.products.find((product) => product.id === idEliminarProducto)
-        if (productindex === -1) {
+        if (encontrarId === -1) {
             console.log("not found"); 
             return;
         } else {
@@ -83,11 +88,13 @@ deleteProduct(idEliminarProducto);{
         }
 }
 
-
+}
 
 //PRUEBAS
 const productManager = new ProductManager();
 productManager.addProduct('proteina mag', 'proteina en polvo', 5000, "./img/proteina_mag.png", 30, 10);
 productManager.addProduct('creatina gold',"100% pura", 6000, "./img/creatina_gold.png", 10, 200);
-productManager.getProductById(1);  //pongo un id que no existe para que aparezca "not found"
+productManager.getProductById(4); 
+//productManager.upDateProduct(1, "hola")
+//productManager.deleteProduct(1)
 console.log(productManager.getProducts());

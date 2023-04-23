@@ -3,100 +3,135 @@ const fs = require("fs")
 class ProductManager {
 	#id = 0;  //privado
 
-	constructor() {
-		this.products = [];
-		const path = fs.promises.writeFile(this.path) 
+	constructor(path) {
+		this.path = path;
+		 fs.promises.writeFile(this.path, JSON.stringify([]));
 	}
 
-	getProducts() {    //no funciona
-		const getProduct = fs.readFileSync("./Products.json", "utf-8")           //promises
-		return(getProduct)
-	}
+	#readFile = async () => {
+		const readProduct = await fs.promises.readFile(this.path, 'utf-8');
+		return JSON.parse(readProduct);
+	};
 
-	addProduct(Title, Description, Price, Thumbnail, Code, Stock) {
-		let filtro = this.products.filter((prod) => prod.Code === Code) //verifico que no se repita el codigo
-		if (filtro.length > 0) {
-			console.log("el codigo ya existe");
+	getProducts = async () => {
+		let obtenerProductos = await this.#readFile();
+		console.log(obtenerProductos);
+	};
+
+
+
+
+	addProduct = async(title, description, price, thumbnail, code, stock) => {
+
+		//verifico que los campos sean obligatorios
+		if (title === undefined || description === undefined || price === undefined || thumbnail === undefined || code === undefined || stock === undefined) {
+			console.log("ERROR: Debes completar los campos requeridos");
+			return;
 		}
+         
+		 let products = await this.#readFile();
+
+		let filtro = products.find((prod) => prod.code === code) //verifico que no se repita el codigo
+		if (filtro) {
+			console.log("el codigo ya existe");
+			return
+		}
+		
 
 		const product = {
-			Title,
-			Description,
-			Price,
-			Thumbnail,
-			Code,
-			Stock,
+			title,
+			description,
+			price,
+			thumbnail,
+			code,
+			stock,
 		};
 
 		// le agrego el ID al producto
 		product.id = this.#getID();
 
-		//verifico que los campos sean obligatorios
-		if (product.Title === undefined || product.Description === undefined || product.Price === undefined || product.Thumbnail === undefined || product.Code === undefined || product.Stock === undefined) {
-			console.log("ERROR: Debes completar los campos requeridos");
-			return;
-		} this.products.push(product);  // Agrego el producto a la lista de productos
+		products.push(product);  // Agrego el producto a la lista de productos
 
-		const pasarProductos = fs.promises.writeFile("products.json", this.products)
+	  await fs.promises.writeFile(this.path, JSON.stringify(products))
 	}
 
-	
 	#getID() {    // privado y lo incremento para que no se repita
 		this.#id++;
 		return this.#id;
 	}
-    getProductById(idProduct){ 
-        const productindex = this.products.findIndex((product) => product.id === idProduct) 
-        const seeID = this.products.find((product) => product.id === idProduct)
-        if (productindex === -1) {
+
+
+
+
+    getProductById = async(idProduct) =>{ 
+	let products = await this.#readFile();
+        //const productindex = this.products.findIndex((product) => product.id === idProduct) 
+        const seeID = products.findIndex((product) => product.id === idProduct)
+        if (seeID === -1) {  //productIndex
             console.log("not found");  //si no lo encuentra me devuelve not found
             return;
         } else {
-            console.log(seeID);  
+            console.log(products[seeID]);  
         }
     }
 
 	
-
-	
-	upDateProduct(idDelProducto, campoAActualizar, valorNuevo){
-		const buscarId = this.products.find((product) => product.id === idDelProducto)
-		console.log(buscarId);
-		product.campoAActualizar = valorNuevo
+	upDateProduct = async({id, ...product}) => {
+		if (product.title === undefined || product.description === undefined || product.price === undefined || product.thumbnail === undefined || product.code === undefined || product.stock === undefined || id === undefined) {
+			console.log("ERROR: Debes completar los campos requeridos");
+			return;
+		}
+		await this.deleteProduct(id)
+		const productosViejos = await this.#readFile();
+		const nuevoArray = [{...product, id}, ...productosViejos] 
+		await fs.promises.writeFile(this.path, JSON.stringify(nuevoArray))
 	}
 
 	
 
 
-	/*changeValue = (valor) => {
-		product = {...product, valor}
-		return console.log(product);
-	}
-	
-}
-changeValue({"Title": "bolsa de boxeo"})*/
 
-
-
-deleteProduct(idEliminarProducto){
-    const encontrarId = this.products.find((product) => product.id === idEliminarProducto)
-        if (encontrarId === -1) {
+   deleteProduct = async(idEliminarProducto)=>{
+	let products = await this.#readFile();
+    const encontrarIndex = await products.findIndex((product) => product.id === idEliminarProducto)
+        if (encontrarIndex === -1) {
             console.log("not found");
             return;
-        } else {
-			const indexProducto = (product) => encontrarId.id === idEliminarProducto;
-			this.products.findIndex()
-           const productoEliminado = products.splice(indexProducto, 1)
         }
-}
+		let nuevosProductos = products.filter((products) => products.id != idEliminarProducto)
+		await fs.promises.writeFile(this.path, JSON.stringify(nuevosProductos))
+	}
 
 }
 
 //PRUEBAS
-const productManager = new ProductManager();
-productManager.addProduct('proteina mag', 'proteina en polvo', 5000, "./img/proteina_mag.png", 30, 10);
-productManager.addProduct('creatina gold',"100% pura", 6000, "./img/creatina_gold.png", 10, 200);
-productManager.getProductById(4); 
-//productManager.upDateProduct(1, "hola")
-//productManager.deleteProduct(1)
-console.log(productManager.getProducts());
+const listaDeProductos = new ProductManager("./products");
+
+const tester = async() => {
+	try{
+		await listaDeProductos.getProducts();
+		await listaDeProductos.addProduct('proteina mag', 'proteina en polvo', 5000, "./img/proteina_mag.png", 30, 10);
+		await listaDeProductos.addProduct('creatina gold',"100% pura", 6000, "./img/creatina_gold.png", 10, 200);
+		await listaDeProductos.getProductById(1); 
+		await listaDeProductos.getProducts();
+		await listaDeProductos.upDateProduct({
+			title: 'bolsa de boxeo',
+			description: "bolsa de plastico",
+			price: 4784,
+			thumbnail: "sin imagen",
+			code: 227940,
+			stock: 7382,
+			id: 2
+		})
+		await listaDeProductos.getProducts();
+		await listaDeProductos.deleteProduct(1)
+		await listaDeProductos.getProducts();
+	}
+	
+	catch(err){
+		console.log(err);
+	}
+}
+
+tester()
+

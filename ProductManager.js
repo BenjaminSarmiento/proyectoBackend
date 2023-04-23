@@ -8,8 +8,8 @@ class ProductManager {
 		const path = fs.promises.writeFile(this.path) 
 	}
 
-	getProducts() {
-		const getProduct = fs.promises.readFile("./Products.json", "utf-8") 
+	getProducts() {    //no funciona
+		const getProduct = fs.readFileSync("./Products.json", "utf-8")           //promises
 		return(getProduct)
 	}
 
@@ -81,10 +81,12 @@ changeValue({"Title": "bolsa de boxeo"})*/
 deleteProduct(idEliminarProducto){
     const encontrarId = this.products.find((product) => product.id === idEliminarProducto)
         if (encontrarId === -1) {
-            console.log("not found"); 
+            console.log("not found");
             return;
         } else {
-            fs.promises.unlink(product);  
+			const indexProducto = (product) => encontrarId.id === idEliminarProducto;
+			this.products.findIndex()
+           const productoEliminado = products.splice(indexProducto, 1)
         }
 }
 

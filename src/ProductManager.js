@@ -1,11 +1,11 @@
+import fs from "fs"
 
-const fs = require("fs")
-class ProductManager {
+export default class ProductManager {
 	#id = 0;  //privado
 
 	constructor(path) {
 		this.path = path;
-		 fs.promises.writeFile(this.path, JSON.stringify([]));
+		 fs.promises.writeFile("./products", JSON.stringify([]));
 	}
 
 	#readFile = async () => {

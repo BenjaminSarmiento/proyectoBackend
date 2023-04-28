@@ -5,7 +5,7 @@ export default class ProductManager {
 
 	constructor(path) {
 		this.path = path;
-		 fs.promises.writeFile("./products", JSON.stringify([]));
+		 fs.promises.writeFile(this.path, JSON.stringify([]));
 	}
 
 	#readFile = async () => {
@@ -109,11 +109,14 @@ const listaDeProductos = new ProductManager("./products");
 
 const tester = async() => {
 	try{
-		await listaDeProductos.getProducts();
+		//await listaDeProductos.getProducts();
 		await listaDeProductos.addProduct('proteina mag', 'proteina en polvo', 5000, "./img/proteina_mag.png", 30, 10);
 		await listaDeProductos.addProduct('creatina gold',"100% pura", 6000, "./img/creatina_gold.png", 10, 200);
-		await listaDeProductos.getProductById(1); 
-		await listaDeProductos.getProducts();
+		await listaDeProductos.addProduct('creatina ena',"creatina micronizada", 7000, "./img/creatina_gold.png", 12, 20);
+		await listaDeProductos.addProduct('creatina star',"creatina creapure", 9000, "./img/creatina_gold.png", 1234, 2);
+		await listaDeProductos.addProduct('creatina ultratech',"creatina importada", 8000, "./img/creatina_gold.png", 543, 100);
+		//await listaDeProductos.getProductById(1); 
+		//await listaDeProductos.getProducts();
 		await listaDeProductos.upDateProduct({
 			title: 'bolsa de boxeo',
 			description: "bolsa de plastico",
@@ -124,8 +127,8 @@ const tester = async() => {
 			id: 2
 		})
 		await listaDeProductos.getProducts();
-		await listaDeProductos.deleteProduct(1)
-		await listaDeProductos.getProducts();
+		//await listaDeProductos.deleteProduct(1)
+		//await listaDeProductos.getProducts();
 	}
 	
 	catch(err){

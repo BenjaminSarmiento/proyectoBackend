@@ -1,5 +1,7 @@
 import express from "express";
 import ProductoManager from "./ProductManager.js";
+import { readFile } from 'fs/promises';
+
 
 const app = express()
 const ProductManager = new ProductoManager("./products")
@@ -7,68 +9,44 @@ const ProductManager = new ProductoManager("./products")
 app.use(express.urlencoded({extended:true}))
 
 app.get("/products", async (req, res)=>{
+    try {
     let limit = req.query.limit
+
+    const productsData = await readFile('./products', 'utf8');
+    const todosLosProductos = JSON.parse(productsData);
+
+    // Devuelve todos los productos si no se recibe limit
     if (!limit) {
-        res.send(products)
-    } else{
-        res.send()//tengo que enviarle la cantidad de productos que es limit
+        res.send(todosLosProductos);
+      } else {
+        // Devuelve el numero de productos solicitados si se recibe el limit
+        res.send(todosLosProductos.slice(0, limit));
+      }
+    } catch (error) {
+      console.error(error);
     }
+  });
 
 
+// Defino el metodo get para /products/:id
 
-    try{
-        const allProducts = await ProductManager.getProducts()   //cambie el productManager a ProductManager //cambie LET POR CONST
-        res.send(allProducts)
+
+app.get('/products/:id', async (req, res) => {
+    try {
+      const productsData = await readFile('./products', 'utf8');
+      const todosLosProductos = JSON.parse(productsData);
+  
+      let idProduct = Number(req.params.id);  //convierto a numero
+      let ret = todosLosProductos.find((product) => {  //busco el id que coincida con el ingresado y devuelvo el producto
+        return Number(product.id) === idProduct; 
+      });
+  
+      res.send(ret);
+    } catch (error) {
+      console.error(error);
     }
-    catch(err){
-        res.send(err);
-    }
-})
-
-
-// Defino el metodo Get para /product/:id
-
-app.get('/product/:id', (req, res) => {
-	let ret = allProducts.find((product) => { // Buscamos el producto por id  //cambie products por allProducts
-		return product.id === req.params.id;
-	});
-	res.send(ret); 
-});
-
-
-
-app.listen(8080, ()=>{
-    console.log("escuchando 8080");
-})
-
-//ENDPOINTS A IMPLEMENTAR
-
-//query param ?limit =  CON UN IF??
-
-
-
-
-
-
-
-
-/***************************PRACTICA******************************************/
-
-/*app.get("/bienvenida", (req, res)=>{
-   
-    res.send('<p style= "color: blue">te damos la sbienvenida</p>')
-})
-
-app.get("/usuario", (req, res)=>{
-    const user =   {
-        nombre: "benja",
-        apellido: "sarmiento",
-        edad: "19",
-        correo: "benjasarmiento123",
-    };
-    res.send(user)
-})
-
-app.listen(8080, ()=>{
-    console.log("escuchando 8080");
-})*/
+  });
+  
+  app.listen(8080, () => {
+    console.log('Escuchando en el puerto 8080');
+  });

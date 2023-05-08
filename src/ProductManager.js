@@ -21,10 +21,10 @@ export default class ProductManager {
 
 
 
-	addProduct = async(title, description, price, thumbnail, code, stock) => {
+	addProduct = async (title, description, price, thumbnail, code, stock, status = true, category) => {
 
 		//verifico que los campos sean obligatorios
-		if (title === undefined || description === undefined || price === undefined || thumbnail === undefined || code === undefined || stock === undefined) {
+		if (title === undefined || description === undefined || price === undefined || status === undefined || code === undefined || stock === undefined || category === undefined) {
 			console.log("ERROR: Debes completar los campos requeridos");
 			return;
 		}
@@ -45,6 +45,8 @@ export default class ProductManager {
 			thumbnail,
 			code,
 			stock,
+			category,
+			status,
 		};
 
 		// le agrego el ID al producto

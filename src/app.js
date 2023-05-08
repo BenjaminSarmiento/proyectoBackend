@@ -1,4 +1,48 @@
-import express from "express";
+
+import express from 'express';
+import { productosRouter } from './routers/products.router.js';
+import { cartsRouter } from './routers/carts.router.js';
+
+// Creo app Express
+const app = express();
+
+// Seteo carpeta public como raiz de servidor estatico
+app.use(express.static('public'));
+
+// Middelare para parseo de json
+app.use(express.json());
+
+// Utilizamos el middleware para parsear los datos de la petición
+app.use(express.urlencoded({ extended: true }));
+
+// Utilizo ruta de products para "/api/products"
+app.use('/api/products', productosRouter);
+
+// Utilizo ruta de carts para "/api/carts"
+app.use('/api/carts', cartsRouter);
+
+
+app.listen(8080, () => {
+	console.log('Levante el server papilooo');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import express from "express";
 import ProductoManager from "./ProductManager.js";
 import { readFile } from 'fs/promises';
 
@@ -49,4 +93,4 @@ app.get('/products/:id', async (req, res) => {
   
   app.listen(8080, () => {
     console.log('Escuchando en el puerto 8080');
-  });
+  });*/

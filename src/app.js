@@ -1,29 +1,28 @@
 
+// Importo express
 import express from 'express';
-import { productosRouter } from './routers/products.router.js';
-import { cartsRouter } from './routers/carts.router.js';
 
-// Creo app Express
+// Importo rutas
+import productsRoutes from './routes/productsRouter.js';
+import cartsRoutes from './routes/cartsRoutes.js';
+
 const app = express();
+const port = 8080; // Almaceno valor del puerto que escuchará el servidor
 
-// Seteo carpeta public como raiz de servidor estatico
-app.use(express.static('public'));
-
-// Middelare para parseo de json
+// Middlewares
+// Para interpretar mensajes de tipo JSON en formato urlencoded
 app.use(express.json());
-
-// Utilizamos el middleware para parsear los datos de la petición
 app.use(express.urlencoded({ extended: true }));
 
-// Utilizo ruta de products para "/api/products"
-app.use('/api/products', productosRouter);
 
-// Utilizo ruta de carts para "/api/carts"
-app.use('/api/carts', cartsRouter);
+// Para utilizar las rutas
+app.use('/api/products', productsRoutes);
+app.use('/api/carts', cartsRoutes);
 
 
-app.listen(8080, () => {
-	console.log('Levante el server papilooo');
+// Inicializo el servidor
+app.listen(port, () => {
+	console.log(`Listen Port ${port}`);
 });
 
 

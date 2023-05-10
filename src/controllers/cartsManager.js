@@ -5,7 +5,7 @@ import productsManager from './productsManager.js';
 
 // Creo una instancia de ProductsManager
 const listProductsToCart = new productsManager();
-
+  
 export default class cartsManager {
 	constructor() {
 		this.path = './src/models/carts.json';

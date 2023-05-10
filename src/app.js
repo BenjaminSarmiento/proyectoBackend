@@ -3,8 +3,8 @@
 import express from 'express';
 
 // Importo rutas
-import productsRoutes from './routes/productsRouter.js';
-import cartsRoutes from './routes/cartsRoutes.js';
+import productsRoutes from './routers/productsRouters.js';
+import cartsRoutes from './routers/cartsRouters.js';
 
 const app = express();
 const port = 8080; // Almaceno valor del puerto que escuchará el servidor

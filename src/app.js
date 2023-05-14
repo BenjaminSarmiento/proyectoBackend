@@ -1,5 +1,57 @@
 
-// Importo express
+import { express } from "express"
+import handlebars from "express-handlebars"
+import { Server } from "socket.io"
+import viewsRouter from "./routes/views.router.js"
+
+const app = express()
+const httpServer = app.listen(8080, ()=> console.log("escuchando pueto 8080"));
+
+/*let user = {
+  name: "Benjamin",
+  last_name: "Sarmiento"
+}*/
+
+const socketServer = new Server(httpServer) //socketsServer va a ser un servidor para trabajar con sockets
+
+//set handlebars
+app.engine("handlebars", handlebars.engine())
+app.set("views", "views/")
+app.set("view engine", "handlebars")
+app.use(express.static("public"))
+app.use("/", viewsRouter)
+
+socketServer.on("connection", socket=>{
+  console.log("nuevo cliente conectado");
+
+  socket.on("message", (data)=>{
+    console.log(data);  //cuando el socket conectado envie un evento del tipo "message", responder por consola con la "data"
+  })
+
+  socket.emit("evento_para_ socket_individual", "hola, me estoy comunicando desde websocket")
+  socket.broadcast.emit("evento_para_ todos_menos_para_el_socket_actual", "este envento lo van a ver todos, menos el socket que envio el mensaje")
+  socketServer("evento_para_ todos", "este mensaje lo reciben todos los usuarios conectados")
+  
+})
+
+app.listen(8080, ()=>{
+  console.log("escuchando puerto 8080");
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*// Importo express
 import express from 'express';
 
 // Importo rutas
@@ -11,6 +63,7 @@ const port = 8080; // Almaceno valor del puerto que escuchará el servidor
 
 // Middlewares
 // Para interpretar mensajes de tipo JSON en formato urlencoded
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -19,23 +72,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/products', productsRoutes);
 app.use('/api/carts', cartsRoutes);
 
-
 // Inicializo el servidor
 app.listen(port, () => {
 	console.log(`Listen Port ${port}`);
-});
+});*/
 
 
 
 
-
-
-
-
-
-
-
-
+/******************* */ 
 
 
 

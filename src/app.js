@@ -4,15 +4,14 @@ import handlebars from "express-handlebars"
 import { Server } from "socket.io"
 import viewsRouter from "./routes/views.router.js"
 
+
+// Inicialización de la app
 const app = express()
-const httpServer = app.listen(8080, ()=> console.log("escuchando pueto 8080"));
 
-/*let user = {
-  name: "Benjamin",
-  last_name: "Sarmiento"
-}*/
+//const httpServer = app.listen(8080, ()=> console.log("escuchando pueto 8080"));
 
-const socketServer = new Server(httpServer) //socketsServer va a ser un servidor para trabajar con sockets
+
+//const socketServer = new Server(httpServer) //socketsServer va a ser un servidor para trabajar con sockets
 
 //set handlebars
 app.engine("handlebars", handlebars.engine())
@@ -20,6 +19,14 @@ app.set("views", "views/")
 app.set("view engine", "handlebars")
 app.use(express.static("public"))
 app.use("/", viewsRouter)
+
+// Inicialización del servidor
+const webServer = app.listen(8080, () => {
+	console.log('Escuchando 8080');
+});
+
+// Inicialización de socket.io
+const io = new Server(webServer);
 
 socketServer.on("connection", socket=>{
   console.log("nuevo cliente conectado");

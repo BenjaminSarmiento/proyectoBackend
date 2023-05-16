@@ -1,30 +1,48 @@
 
 import { express } from "express"
+import { server, app } from './utils/socket.js';
 import handlebars from "express-handlebars"
-import { Server } from "socket.io"
+//import { Server } from "socket.io"
+
+import cartsRoutes from './routers/cartsRoutes.js';
+import productsRoutes from './routers/productsRoutes.js';
 import viewsRouter from "./routes/views.router.js"
+
+// seteo middlewares obligatorios
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 // Inicialización de la app
-const app = express()
-
+//const app = express()
 //const httpServer = app.listen(8080, ()=> console.log("escuchando pueto 8080"));
-
-
 //const socketServer = new Server(httpServer) //socketsServer va a ser un servidor para trabajar con sockets
+
 
 //set handlebars
 app.engine("handlebars", handlebars.engine())
 app.set("views", "views/")
 app.set("view engine", "handlebars")
-app.use(express.static("public"))
-app.use("/", viewsRouter)
 
-// Inicialización del servidor
+//carpeta ppublica estatica
+app.use(express.static("public"))
+
+//rutas
+app.use("/", viewsRouter)
+app.use('/api/carts', cartsRoutes);
+app.use('/api/products', productsRoutes);
+
+const port = 8080;
+server.listen(port, () => console.log("escuchando 8080"));
+
+
+
+
+
+/* Inicialización del servidor
 const webServer = app.listen(8080, () => {
 	console.log('Escuchando 8080');
 });
-
 // Inicialización de socket.io
 const io = new Server(webServer);
 
@@ -43,20 +61,9 @@ socketServer.on("connection", socket=>{
 
 app.listen(8080, ()=>{
   console.log("escuchando puerto 8080");
-})
+})*/
 
-
-
-
-
-
-
-
-
-
-
-
-
+/********* */
 
 /*// Importo express
 import express from 'express';

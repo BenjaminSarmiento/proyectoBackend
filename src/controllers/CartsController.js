@@ -1,12 +1,13 @@
 // Importo fs, nanoid (para generar id automáticamente) y productsManager (para utilizar sus métodos)
 import fs from 'fs';
 import { nanoid } from 'nanoid';
-import productsManager from './productsManager.js';
+//import productsManager from './ProductsController.js';
+import { listOfProducts } from '../utils/instances.js';
 
 // Creo una instancia de ProductsManager
-const listProductsToCart = new productsManager();
+//const listProductsToCart = new productsManager();
   
-export default class cartsManager {
+export default class CartsController {
 	constructor() {
 		this.path = './src/models/carts.json';
 	}
@@ -37,7 +38,7 @@ export default class cartsManager {
 	 * @param {number} id (Id del producto)
 	 */
 	#validIdProduct = async (id) => {
-		let products = await listProductsToCart.getProducts();
+		let products = await listOfProducts.getProducts();
 		return await products.find((product) => product.id === id);
 	};
 

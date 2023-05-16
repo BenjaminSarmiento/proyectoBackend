@@ -2,7 +2,7 @@
 import fs from 'fs';
 import { nanoid } from 'nanoid';
 
-export default class ProductsManager {
+export default class ProductsController {
 	//#id = 0;  //privado
 	constructor() {
 		this.path = './src/models/products.json';

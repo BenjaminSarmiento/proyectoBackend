@@ -9,11 +9,11 @@ export const server = http.createServer(app);
 export const io = new Server(server);
 
 io.on('connection', async (socket) => {
-	console.log('se conecto un usuario');
+	console.log('Cliente conectado..');
 
 	socket.emit('product_list', await listOfProducts.getProducts());
 
 	socket.on('disconnect', () => {
-		console.log('se desconecto un usuario');
+		console.log('Cliente desconectado..');
 	});
 });

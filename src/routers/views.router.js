@@ -1,7 +1,7 @@
-import { express } from "express";
+import { Router } from 'express';
 import { listOfProducts } from '../utils/instances.js';
 
-    const viewsRoutes = Router();
+const viewsRoutes = Router();
 
 viewsRoutes.get('/', async (req, res) => {
 	const productsList = await listOfProducts.getProducts();

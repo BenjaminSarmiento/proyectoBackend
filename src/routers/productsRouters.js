@@ -65,7 +65,7 @@ productsRoutes.put('/:pid', async (req, res) => {
 productsRoutes.delete('/:pid', async (req, res) => {
 	try {
 		let id = req.params.pid;
-		res.status(200).send(await productList.deleteProduct(id));
+		res.status(200).send(await listOfProducts.deleteProduct(id));
 		io.emit('product_list_updated', await listOfProducts.getProducts());
 	} catch (err) {
 		res.status(400).send({ err });

@@ -1,37 +1,32 @@
 
-import { express } from "express"
+// importo dependencias
+import express from 'express';
 import { server, app } from './utils/socket.js';
-import handlebars from "express-handlebars"
-//import { Server } from "socket.io"
+import handlebars from 'express-handlebars';
 
+// importo rutas
 import cartsRoutes from './routers/cartsRoutes.js';
 import productsRoutes from './routers/productsRoutes.js';
-import viewsRouter from "./routes/views.router.js"
+import viewsRoutes from './routers/viewsRoutes.js';
 
 // seteo middlewares obligatorios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// configuro handlebars
+app.engine('handlebars', handlebars.engine());
+app.set('views', 'views/');
+app.set('view engine', 'handlebars');
 
-// Inicialización de la app
-//const app = express()
-//const httpServer = app.listen(8080, ()=> console.log("escuchando pueto 8080"));
-//const socketServer = new Server(httpServer) //socketsServer va a ser un servidor para trabajar con sockets
+// seteo la carpeta public como estática
+app.use(express.static('public/'));
 
-
-//set handlebars
-app.engine("handlebars", handlebars.engine())
-app.set("views", "views/")
-app.set("view engine", "handlebars")
-
-//carpeta ppublica estatica
-app.use(express.static("public"))
-
-//rutas
-app.use("/", viewsRouter)
+// seteo rutas
+app.use('/', viewsRoutes);
 app.use('/api/carts', cartsRoutes);
 app.use('/api/products', productsRoutes);
 
+// inicializo servidor
 const port = 8080;
 server.listen(port, () => console.log("escuchando 8080"));
 

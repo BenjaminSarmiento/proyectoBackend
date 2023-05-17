@@ -1,5 +1,4 @@
-const socket = io(); //instancia el socket y lo guarda en la constante "socket"
-
+const socket = io(); //instancio socket
 
 const render = async (data) => {
 	const html = document.getElementById('listOfProducts');

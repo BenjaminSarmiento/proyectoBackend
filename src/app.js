@@ -1,17 +1,27 @@
 
 // importo dependencias
 import express from 'express';
+import mongoose from 'mongoose';
+import studientsRouter from './routers/studients.router.js';
+import usersRouter from './routers/users.router.js';
+
 import { server, app } from './utils/socket.js';
 import handlebars from 'express-handlebars';
 
 // importo rutas
-import cartsRoutes from './routers/cartsRoutes.js';
-import productsRoutes from './routers/productsRoutes.js';
-import viewsRoutes from './routers/viewsRoutes.js';
+import cartsRoutes from './routers/cartsRouters.js';
+import productsRoutes from './routers/productsRouters.js';
+import viewsRoutes from './routers/views.router.js';
+
 
 // seteo middlewares obligatorios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/studients', studientsRouter);
+app.use('/api/users', usersRouter);
+
+mongoose.connect("mongodb+srv://benjaminsarmiento:carlospaz@codercluster.n7ctytz.mongodb.net/?retryWrites=true&w=majority");
 
 // configuro handlebars
 app.engine('handlebars', handlebars.engine());
@@ -147,3 +157,5 @@ app.get('/products/:id', async (req, res) => {
   app.listen(8080, () => {
     console.log('Escuchando en el puerto 8080');
   });*/
+  
+ 

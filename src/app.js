@@ -3,7 +3,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import studientsRouter from './routers/studients.router.js';
-import usersRouter from './routers/users.router.js';
+import usersRouter from './routers/studients.router.js';
 
 import { server, app } from './utils/socket.js';
 import handlebars from 'express-handlebars';

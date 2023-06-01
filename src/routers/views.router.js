@@ -1,17 +1,16 @@
 import { Router } from 'express';
-import { listOfProducts } from '../utils/instances.js';
+import { studentService } from '../services/student.service.js';
 
-const viewsRoutes = Router();
+const viewsRouter = Router();
 
-viewsRoutes.get('/', async (req, res) => {
-	const productsList = await listOfProducts.getProducts();
-	res.render('home', { title: 'Lista de Productos', products: productsList });
+viewsRouter.use('/', async (req, res) => {
+	try {
+		const students = await studentService.getAllStudents();
+
+		res.render('students', { students });
+	} catch (err) {
+		res.render('error');
+	}
 });
 
-viewsRoutes.get('/realtimeproducts', async (req, res) => {
-	res.render('realTimeProducts', {
-		title: 'Productos en tiempo real',
-	});
-});
-
-export default viewsRoutes;
+export default viewsRouter;

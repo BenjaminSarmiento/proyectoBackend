@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const studientSchema = new mongoose.Schema({
+export const studentSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
@@ -18,10 +18,6 @@ const studientSchema = new mongoose.Schema({
 		type: Number,
 		required: true,
 	},
-	note: {
-		type: Number,
-		required: true,
-	},
 });
 
-export const studientModel = mongoose.model('studients', studientSchema);
+export const studentModel = mongoose.model('students', studentSchema);

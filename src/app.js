@@ -8,6 +8,7 @@ import courseRouter from './routers/course.router.js';
 import viewsRouter from './routers/views.router.js';
 
 const app = express();
+//const messages = [];
 
 app.use(express.json());
 // Utilizamos el middleware para parsear los datos de la petición
@@ -32,6 +33,24 @@ mongoose.connect(
 app.listen(8080, () => {
 	console.log('escucho el 8080');
 });
+
+/*io.on('connection', (socket) => {
+	// Envio los mensajes al cliente que se conectó
+	socket.emit('messages', messages);
+
+	// Escucho los mensajes enviado por el cliente y se los propago a todos
+	socket.on('message', (message) => {
+		console.log(message);
+		// Agrego el mensaje al array de mensajes
+		messages.push(message);
+		// Propago el evento a todos los clientes conectados
+		io.emit('messages', messages);
+	});
+
+	socket.on("sayhello", (data) => {
+		socket.broadcast.emit("connected", data); 
+	})
+});*/
 
 
 

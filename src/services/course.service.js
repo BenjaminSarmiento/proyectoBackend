@@ -1,4 +1,4 @@
-import { courseModel } from '../models/course.model.js';
+/*import { courseModel } from '../models/course.model.js';
 import { studentService } from './student.service.js';
 
 class CouseService {
@@ -23,4 +23,4 @@ class CouseService {
 	}
 }
 
-export const courseService = new CouseService();
+export const courseService = new CouseService();*/

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+/*import mongoose from 'mongoose';
 import { studentSchema } from './student.model.js';
 
 const courseScheme = new mongoose.Schema({
@@ -11,4 +11,4 @@ const courseScheme = new mongoose.Schema({
 	},
 });
 
-export const courseModel = mongoose.model('courses', courseScheme);
+export const courseModel = mongoose.model('courses', courseScheme);*/

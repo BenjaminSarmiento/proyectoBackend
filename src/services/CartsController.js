@@ -1,5 +1,5 @@
 // Importo fs, nanoid
-import fs from 'fs';
+/*import fs from 'fs';
 import { nanoid } from 'nanoid';
 import { listOfProducts } from '../utils/instances.js';
 
@@ -11,24 +11,24 @@ export default class CartsController {
 
 	// Metodos privados
 
-	/* Lee el archivo de carritos */
+	/* Lee el archivo de carritos 
 	#readFileCarts = async () => {
 		const readCart = await fs.promises.readFile(this.path, 'utf-8');
 		return JSON.parse(readCart);
 	};
 
-	/* Escribe el archivo de carritos*/
+	/* Escribe el archivo de carritos
 	#writeFileCarts = async (carts) => {
 		await fs.promises.writeFile(this.path, JSON.stringify(carts));
 	};
 
-	/* Valido que la id del carrito exista*/
+	/* Valido que la id del carrito exista
 	#validIdCart = async (id) => {
 		let carts = await this.#readFileCarts();
 		return carts.find((cart) => cart.id === id);
 	};
 
-	/* Valida que la id del producto exista*/
+	/* Valida que la id del producto exista
 	#validIdProduct = async (id) => {
 		let products = await listOfProducts.getProducts();
 		return await products.find((product) => product.id === id);
@@ -36,7 +36,7 @@ export default class CartsController {
 
 	// Métodos públicos
 
-	/* Agrega un nuevo carrito */
+	/* Agrega un nuevo carrito 
 	addCart = async () => {
 		const listCarts = await this.#readFileCarts();
 		const cart = {
@@ -48,13 +48,13 @@ export default class CartsController {
 		return listCarts; // Retorna el array de carritos incluyendo el nuevo
 	};
 
-	/* Busca carrito por id*/
+	/* Busca carrito por id
 	getCartById = async (id) => {
 		let validCart = await this.#validIdCart(id);
 		return validCart || 'Carrito no encontrado'; // Retorna el carrito buscado y si no lo encontro tira error
 	};
 
-	/* Agrega un producto a un carrito específico*/
+	/* Agrega un producto a un carrito específico
 	addProductToCart = async (cid, pid) => { // Valida id del carrito y del producto
 		let validCart = await this.#validIdCart(cid);
 		if (!validCart) {
@@ -86,4 +86,4 @@ export default class CartsController {
 		await this.#writeFileCarts(newCarts);
 		return 'Producto Agregado al Carrito';
 	};
-}
+}*/

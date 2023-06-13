@@ -1,5 +1,5 @@
 // Importo fs, nanoid 
-import fs from 'fs';
+/*import fs from 'fs';
 import { nanoid } from 'nanoid';
 
 export default class ProductsController {
@@ -9,18 +9,18 @@ export default class ProductsController {
 
 	// Metodos privados
 
-	/* Lee el archivo de productos */
+	/* Lee el archivo de productos 
 	#readFile = async () => {
 		const readProduct = await fs.promises.readFile(this.path, 'utf-8');
 		return JSON.parse(readProduct);
 	};
 
-	/* Escribe el archivo de productos */
+	/* Escribe el archivo de productos 
 	#writeFile = async (products) => {
 		await fs.promises.writeFile(this.path, JSON.stringify(products));
 	};
 
-	/* Valida que la id del producto exista */
+	/* Valida que la id del producto exista 
 	#validId = async (id) => {
 		let products = await this.#readFile();
 		const findProductIndex = await products.findIndex(
@@ -35,20 +35,20 @@ export default class ProductsController {
 	};
 
 	// Métodos públicos
-	/* Muestra lista de productos */
+	/* Muestra lista de productos 
 	getProducts = async () => {
 		let showProducts = await this.#readFile();
 		return showProducts;
 	};
 
-	/* Busca un producto por id y lo muestra*/
+	/* Busca un producto por id y lo muestra
 	getProductById = async (id) => {
 		let products = await this.#readFile();
 		const findProductIndex = await this.#validId(id); //Busco el índice del producto solicitado
 		return products[findProductIndex]; // Retorno el producto solicitado
 	};
 
-	/* Agrega un producto */
+	/* Agrega un producto 
 	addProduct = async (product) => {
 		// Valido que el objeto contenga las propiedades obligatorias
 		if (
@@ -93,7 +93,7 @@ export default class ProductsController {
 		return 'Producto agregado'; // Retorno el array de productos incluyendo el nuevo
 	};
 
-	/* Actualiza valores de un producto*/
+	/* Actualiza valores de un producto
 	updateProduct = async (id, product) => {
 		await this.#validId(id); // Valido que la id del producto existe
 		let listProducts = await this.#readFile();
@@ -109,7 +109,7 @@ export default class ProductsController {
 		return 'Producto actualizado';
 	};
 
-	/*Elimina un producto*/
+	/*Elimina un producto
 	deleteProduct = async (id) => {
 		let products = await this.#readFile();
 		//Busco el producto solicitado en el array
@@ -122,4 +122,4 @@ export default class ProductsController {
 		}
 		return 'ID no encontrada';
 	};
-}
+}*/

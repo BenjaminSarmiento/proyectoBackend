@@ -1,4 +1,4 @@
-import { Server } from 'socket.io';
+/*import { Server } from 'socket.io';
 import express from 'express';
 import http from 'http';
 import { listOfProducts } from '../utils/instances.js';
@@ -16,4 +16,4 @@ io.on('connection', async (socket) => {
 	socket.on('disconnect', () => {
 		console.log('Cliente desconectado..');
 	});
-});
+});*/

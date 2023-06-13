@@ -1,4 +1,4 @@
-import { studentModel } from '../models/student.model.js';
+/*import { studentModel } from '../models/student.model.js';
 
 class StudentService {
 	constructor() {
@@ -22,4 +22,4 @@ class StudentService {
 	}
 }
 
-export const studentService = new StudentService();
+export const studentService = new StudentService();*/

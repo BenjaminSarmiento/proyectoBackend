@@ -1,5 +1,5 @@
 // Importo Router y cartsManager para utilizar sus métodos
-import { Router } from 'express';
+/*import { Router } from 'express';
 import { listOfCarts } from '../utils/instances.js';
 
 const cartsRoutes = Router();
@@ -35,4 +35,4 @@ cartsRoutes.post('/:cid/product/:pid', async (req, res) => {
 	}
 });
 
-export default cartsRoutes;
+export default cartsRoutes;*/

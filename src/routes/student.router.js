@@ -1,4 +1,4 @@
-import { Router } from 'express';
+/*import { Router } from 'express';
 import { studentService } from '../services/student.service.js';
 
 const studentRouter = Router();
@@ -32,4 +32,4 @@ studentRouter.delete('/:uid', async (req, res) => {
 	}
 });
 
-export default studentRouter;
+export default studentRouter;*/

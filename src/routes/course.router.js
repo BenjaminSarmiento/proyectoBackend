@@ -1,4 +1,4 @@
-import { Router } from 'express';
+/*import { Router } from 'express';
 import { courseService } from '../services/course.service.js';
 
 const courseRouter = Router();
@@ -36,4 +36,4 @@ courseRouter.post('/:courseId', async (req, res) => {
 	}
 });
 
-export default courseRouter;
+export default courseRouter;*/

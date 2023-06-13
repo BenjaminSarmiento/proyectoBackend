@@ -1,38 +1,52 @@
 
-import express from 'express';
-import handlebars from 'express-handlebars';
-import mongoose from 'mongoose';
+// importo express
+import express from "express";
+// importo mongoose
+import mongoose from "mongoose";
+// importo handlebars
+import handlebars from "express-handlebars";
+// importo el carts y el products router
+import cartsRouter from "./routes/carts.router.js";
+import productsRouter from "./routes/products.router.js";
+// importo el router para las vistas
+import viewsRouter from "./routes/views.router.js";
 
-import studentRouter from './routers/student.router.js';
-import courseRouter from './routers/course.router.js';
-import viewsRouter from './routers/views.router.js';
+// importo un error middleware
+import errorMiddleware from "./middleware/error.middleware.js";
 
+// declaro mi app
 const app = express();
-//const messages = [];
 
+// agrego middlewares de express
 app.use(express.json());
-// Utilizamos el middleware para parsear los datos de la petición
 app.use(express.urlencoded({ extended: true }));
 
-// Set handlebars
-app.engine('handlebars', handlebars.engine());
-app.set('views', 'views/');
-app.set('view engine', 'handlebars');
+// setteo el engine
+app.engine("handlebars", handlebars.engine());
+// setteo rutas de archivos estaticos
+app.use(express.static("public"));
+//app.set("views", path.join(__dirname, "..", "/views"));
+app.set("views", "views/");
+app.set("view engine", "handlebars");
 
-// Seteo el directorio de archivos estáticos
-app.use(express.static('public'));
+// defino las rutas
+app.use("/api/carts", cartsRouter);
+app.use("/api/products", productsRouter);
+app.use("/", viewsRouter);
 
-app.use('/api/students', studentRouter);
-app.use('/api/courses', courseRouter);
-app.use('/', viewsRouter);
+// agrego el middleware para el manejo de error
+app.use(errorMiddleware);
 
-mongoose.connect(
-	'mongodb+srv://benjaminsarmiento:carlospaz@codercluster.n7ctytz.mongodb.net/?retryWrites=true&w=majority'
-);
+// conecto a mongoose
+mongoose.connect("mongodb://127.0.0.1:27017/ecommerce");
 
+// levanto al servidor en puerto 8080
 app.listen(8080, () => {
-	console.log('escucho el 8080');
+  console.log("Escuchando en puerto 8080");
 });
+
+
+
 
 /*io.on('connection', (socket) => {
 	// Envio los mensajes al cliente que se conectó

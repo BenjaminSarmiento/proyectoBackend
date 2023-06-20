@@ -1,124 +1,70 @@
-import mongoose from "mongoose";
-import Cart from "../models/Cart.js";
-import Product from "../models/Product.js";
-import CustomError from "../utils/CustomError.utils.js";
+import cartDao from "../dao/Carts.DAO.js";
+import productDao from "../dao/Products.DAO.js";
 
-
-// la innovacion grande de este codigo vs entrega anterior es que 
-// estoy usando mongoDB
-// estoy arrojando errores custom
-
-class CartsService {
-  constructor() {
-    this.Cart = Cart;
-    this.Product = Product;
+class CartService {
+  constructor(cartDao, productDao) {
+    this.cartDao = cartDao;
+    this.productDao = productDao;
   }
 
-  async createCart() {
-    const cart = await this.Cart.create({});
+  async new() {
+    const cartData = { products: [] };
+    const cart = await this.cartDao.createOne(cartData);
     return cart;
   }
 
-  async getCart(cid) {
-    const isValid = mongoose.Types.ObjectId.isValid(cid);
-    if (!isValid) throw new CustomError(400, "Parametros invalidos");
-    const cart = await this.Cart.findById(cid);
-    if (!cart) throw new CustomError(400, "No existe el carrito");
+  async getOne(cid) {
+    const cart = await this.cartDao.getOne(cid);
     return cart;
   }
 
-  async #validateProduct(pid) {
-    const isValid = mongoose.Types.ObjectId.isValid(pid);
-    if (!isValid) throw new CustomError(400, "Parametros invalidos");
-    const product = await this.Product.findById(pid);
-    if (!product) throw new CustomError(400, "No existe el producto");
-  }
+  async add(cid, pid) {
+    // obtengo por id el cart y el producto
+    const cart = await this.cartDao.getOne(cid);
+    const product = await this.productDao.getOne(pid);
 
-  async #validateProdObj(prod) {
-    // si no existe el campo product es invalido
-    if (!prod.product) return false;
-    // si no existe el campo quantity es invalido
-    if (!prod.quantity) return false;
-    // si la cantidad no es un numero es invalido
-    if (isNaN(prod.quantity)) return false;
-    // si el ID no es un ID de mongo es invalido
-    const isValid = mongoose.Types.ObjectId.isValid(prod.product);
-    if (!isValid) return false;
-    // si el producto no existe es invalido
-    const product = await this.Product.findById(prod.product);
-    if (!product) return false;
-    return true;
-  }
-
-  async addProduct(cid, pid) {
-    const cart = await this.getCart(cid);
-    await this.#validateProduct(pid);
-    let products = cart.products;
-    const inCart = products.some((prod) => prod.product.toString() === pid);
-    if (inCart) {
-      products = products.map((prod) => {
-        if (prod.product.toString() == pid) {
-          return { ...prod, quantity: prod.quantity + 1 };
-        }
-        return prod;
-      });
+    // si no existe un cart o la cantidad no esta setteada devuelvo un 400
+    if (cart === undefined || product === undefined) {
+      throw new Error("client-faltan parametros");
     } else {
-      products.push({ product: pid, quantity: 1 });
+      // si encuentro cart y la quantity esta definido busco los prods del cart
+      let products = cart.products ?? [];
+
+      // checkeo que este en la cart el producto con el id pid
+      const inCart = products?.some((prod) => prod.product == pid);
+
+      // si existe el producto modifico con un map el producto
+      if (inCart) {
+        products = products.map((prod) => {
+          if (prod.product == pid) {
+            return { ...prod, quantity: prod.quantity + 1 };
+          }
+          return prod;
+        });
+      } else {
+        // si no existe al array de productos el producto
+        products.push({ product: pid, quantity: 1 });
+      }
+      // grabo en el cart manager el carrito actualizado
+      await this.cartDao.updateOne(cid, { products });
+      return products;
     }
-    cart.products = products;
-    await cart.save();
-    return cart;
   }
 
-  async removeProduct(cid, pid) {
-    const cart = await this.getCart(cid);
-    let products = cart.products;
-    cart.products = products.filter((prod) => prod.product.toString() != pid);
-    await cart.save();
-    return cart;
-  }
-
-  async updateCart(cid, products) {
-    const cart = await this.getCart(cid);
-    let isCartValid = true;
-    await products.forEach(async (prod) => {
-      const isProdValid = await this.#validateProdObj(prod);
-      if (!isProdValid) isCartValid = false;
-    });
-    if (!isCartValid) throw new CustomError(400, "Parametros invalidos");
-    cart.products = products;
-    await cart.save();
-    return cart;
-  }
-
-  async updateProduct(cid, pid, quantity) {
-    const cart = await this.getCart(cid);
-    await this.#validateProduct(pid);
-    let products = cart.products;
-    const inCart = products.some((prod) => prod.product.toString() === pid);
-    if (inCart) {
-      products = products.map((prod) => {
-        if (prod.product.toString() == pid) {
-          return { ...prod, quantity: quantity };
-        }
-        return prod;
-      });
+  async delete(cid, pid) {
+    const cart = await cartDao.getOne(cid);
+    if (cart === undefined) {
+      throw new Error("client-parametros incorrectos");
     } else {
-      products.push({ product: pid, quantity: quantity });
+      let products = cart.products;
+      // filtro el array products para eliminar el elemento que tenga el id === pid
+      products = products.filter((prod) => prod.product !== pid);
+      await this.cartDao.updateOne(cid, { products });
+      return products;
     }
-    cart.products = products;
-    await cart.save();
-    return cart;
-  }
-
-  async clearCart(cid) {
-    const cart = await this.getCart(cid);
-    cart.products = [];
-    await cart.save();
-    return cart;
   }
 }
 
-const cartsService = new CartsService();
+const cartService = new CartService(cartDao, productDao);
 
-export default cartsService;
+export default cartService;

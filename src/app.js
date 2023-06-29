@@ -1,11 +1,16 @@
-
 // importo express
 import express from "express";
 
+// importo dotenv
+import dotenv from "dotenv";
+
 // importo el cookie parser
 import cookieParser from "cookie-parser";
+// importo mongostore, session y passport
 import MongoStore from "connect-mongo";
 import session from "express-session";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 // importo handlebars
 import handlebars from "express-handlebars";
@@ -16,7 +21,9 @@ import productsRouter from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import usersRouter from "./routes/users.router.js";
+import githubRouter from "./routes/github.router.js";
 
+dotenv.config();
 // declaro mi app
 const app = express();
 
@@ -31,7 +38,7 @@ app.use(cookieParser("secret"));
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: "mongodb://127.0.0.1:27017/ecommerce",
+      mongoUrl: process.env.MONGO_URL,
       mongoOptions: {
         useNewUrlParser: true,
       },
@@ -42,6 +49,11 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 // setteo el engine
 app.engine("handlebars", handlebars.engine());
 
@@ -57,10 +69,10 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/github", githubRouter);
 app.use("/", viewsRouter);
 // exporto la app
 export default app;
-
 
 
 

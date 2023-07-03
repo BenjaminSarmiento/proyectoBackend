@@ -3,14 +3,6 @@ import express from "express";
 
 //import { Server } from "socket.io";
 
-// creo el webserver
-const webServer = app.listen(8080, () => {
-  console.log("Escuchando en puerto 8080");
-});
-
-// creo io
-const io = new Server(webServer);
-
 // importo dotenv
 import dotenv from "dotenv";
 
@@ -59,6 +51,14 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+// creo el webserver
+const webServer = app.listen(8080, () => {
+  console.log("Escuchando en puerto 8080");
+});
+
+// creo io
+const io = new Server(webServer);
 
 initializePassport();
 app.use(passport.initialize());

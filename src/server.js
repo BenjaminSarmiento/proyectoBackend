@@ -1,7 +1,9 @@
 // importo socket.io
 import { Server } from "socket.io";
 // importo app
-import app from "../src/app.js";
+//import app from "../src/app.js";
+
+import { webServer } from "./app.js";
 // importo mongoose
 import mongoose from "mongoose";
 
@@ -13,10 +15,10 @@ mongoose.connect(process.env.MONGO_URL);
 // creo el webserver
 /*const webServer = app.listen(8080, () => {
   console.log("Escuchando en puerto 8080");
-});
+});*/
 
 // creo io
-const io = new Server(webServer);*/
+const io = new Server(webServer);
 
 // importo el productsManager
 import productDao from "./dao/Products.DAO.js";

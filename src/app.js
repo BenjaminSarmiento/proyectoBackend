@@ -52,13 +52,8 @@ app.use(
   })
 );
 
-// creo el webserver
-const webServer = app.listen(8080, () => {
-  console.log("Escuchando en puerto 8080");
-});
-
 // creo io
-const io = new Server(webServer);
+//const io = new Server(webServer);
 
 initializePassport();
 app.use(passport.initialize());
@@ -81,6 +76,13 @@ app.use("/api/messages", messagesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/github", githubRouter);
 app.use("/", viewsRouter);
+
+// creo el webserver
+const webServer = app.listen(8080, () => {
+  console.log("Escuchando en puerto 8080");
+});
+
+
 // exporto la app
 //export default app;
 export { webServer };

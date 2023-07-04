@@ -1,4 +1,49 @@
+
 // importo socket.io
+import { Server } from 'socket.io';
+// importo mongoose
+import mongoose from 'mongoose';
+import express from 'express';
+import http from 'http';
+import dotenv from 'dotenv';
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL);
+
+export const app = express();
+// creo el webserver
+export const webServer = http.createServer(app);
+// creo io
+export const io = new Server(webServer);
+
+// importo el productsManager
+import productDao from './dao/Products.DAO.js';
+import messagesDao from './dao/Messages.DAO.js';
+
+// cada vez que conecta mando los productos
+io.on('connection', async (socket) => {
+	console.log('Cliente conectado');
+	const products = await productDao.getAll();
+	const messages = await messagesDao.getAll();
+	socket.emit('products', products);
+	socket.emit('messages', messages);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*// importo socket.io
 import { Server } from "socket.io";
 // importo app
 //import app from "../src/app.js";
@@ -15,7 +60,7 @@ mongoose.connect(process.env.MONGO_URL);
 // creo el webserver
 /*const webServer = app.listen(8080, () => {
   console.log("Escuchando en puerto 8080");
-});*/
+});
 
 // creo io
 const io = new Server(webServer);
@@ -34,4 +79,4 @@ io.on("connection", async (socket) => {
 });
 
 // exporto io, lo voy a usar para el products router (con PUT, DELETE y POST)
-export { io };
+export { io };*/

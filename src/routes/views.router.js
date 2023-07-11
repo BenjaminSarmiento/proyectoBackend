@@ -1,51 +1,19 @@
 // importo el router de express
 import { Router } from "express";
-import productDao from "../dao/Products.DAO.js";
-// importo el middleware de auth
+// importo el controlador de las vistas
+import * as viewsController from "../controllers/views.controller.js";
 import { isAuth, isGuest } from "../middleware/auth.middleware.js";
-import asPOJO from "../utils/asPOJO.utils.js";
-// creo mi router
 const router = Router();
 
-// creo una funcion auxiliar
-const getUser = (req) => {
-  if (!req.user) return false;
-  let user = asPOJO(req.user);
-  delete user.password;
-  delete user.__v;
-  return user;
-};
-
-// en el root renderizo los productos que obtengo con el productsManager
-router.get("/", async (req, res) => {
-  const user = getUser(req);
-  const title = "Fakestore";
-  const products = await productDao.getAll();
-  res.render("index", { products, user, title });
-});
-
-// en realtimeproducts renderizo la pagina y no le mando nada, lo obtiene por socket
-router.get("/realtimeproducts", isAuth, (req, res) => {
-  const user = getUser(req);
-  res.render("realTimeProducts", { user });
-});
-
-router.get("/chat", (req, res) => {
-  const user = getUser(req);
-  res.render("chat", { user });
-});
-
-router.get("/register", isGuest, (req, res) => {
-  res.render("register");
-});
-
-router.get("/login", isGuest, (req, res) => {
-  res.render("login");
-});
-
-router.get("/profile", isAuth, (req, res) => {
-  const user = getUser(req);
-  res.render("profile", { user });
-});
+router
+  .get("/", viewsController.home)
+  .get("/products", viewsController.getAllProducts) // veo todos los productos segun filtros
+  .get("/products/new", isAuth, viewsController.createOneProduct) // vista para crear prods
+  .get("/products/:pid", viewsController.getOneProduct) // vista de un prod
+  .get("/carts/:cid", isAuth, viewsController.getOneCart) // vista de una cart
+  .get("/register", isGuest, viewsController.register)
+  .get("/login", isGuest, viewsController.login)
+  .get("/profile", isAuth, viewsController.profile)
+  .get("*", viewsController.notFound); // vista de un not found
 
 export default router;

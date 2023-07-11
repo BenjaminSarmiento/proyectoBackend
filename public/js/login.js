@@ -1,15 +1,18 @@
 const loginForm = document.getElementById("loginForm");
 const errorHtml = document.getElementById("error");
+const message = document.getElementById("message")
+let product;
+let redirectUrl = "/";
 
 const renderError = (error) => {
   errorHtml.innerHTML = `<div class="alert alert-danger" role="alert">${error}</div>`;
 };
 
 const redirect = () => {
-    loginForm.innerHTML = `<div>Login successful... redirecting!!!</div>`;
+  loginForm.innerHTML = `<div>Login successful... redirecting!!!</div>`;
   setTimeout(() => {
-    window.location.href = "/";
-  }, 2000);
+    window.location.href = redirectUrl;
+  }, 1500);
 };
 
 const handleLogin = async (e) => {
@@ -19,7 +22,7 @@ const handleLogin = async (e) => {
   let dataObj = {};
   formData.forEach((val, key) => (dataObj[key] = val));
 
-  const data = await fetch("http://localhost:8080/api/users/auth", {
+  const data = await fetch("http://localhost:8080/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,3 +35,12 @@ const handleLogin = async (e) => {
 };
 
 loginForm.addEventListener("submit", handleLogin);
+
+const handleLoad = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const product = urlParams.get("product");
+  if (product) redirectUrl = `/products/${product}`;
+  if(redirectUrl!="/") message.innerHTML = "<b>You must be logged in to add products to cart...</b>"
+};
+
+window.onload = handleLoad;

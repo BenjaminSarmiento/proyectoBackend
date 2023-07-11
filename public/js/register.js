@@ -4,7 +4,7 @@ const errorHtml = document.getElementById("error");
 const redirect = () => {
   registerForm.innerHTML = `<div>Register successful... redirecting!!!</div>`;
   setTimeout(() => {
-    window.location.href = "/";
+    window.location.href = "/login";
   }, 2000);
 };
 
@@ -19,7 +19,7 @@ const handleSignup = async (e) => {
   let dataObj = {};
   formData.forEach((val, key) => (dataObj[key] = val));
 
-  const data = await fetch("http://localhost:8080/api/users", {
+  const data = await fetch("http://localhost:8080/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

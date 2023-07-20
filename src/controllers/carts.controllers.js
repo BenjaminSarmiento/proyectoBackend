@@ -98,4 +98,4 @@ export const clearCart = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};  
+};

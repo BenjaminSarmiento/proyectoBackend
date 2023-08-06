@@ -1,20 +1,51 @@
-let cart = {};
-const navCartUrl = document.getElementById("navCartUrl");
+const addToCartButtons = document.querySelectorAll(".addToCart");
+const existingCartId = localStorage.getItem('cartId');
 
-const redirect = (pid) => {
-  window.location.href = `http://localhost:8080/products/${pid}`;
-};
+async function verifyCart() {
+  if (existingCartId !== null) {
+    console.log(existingCartId, "el cart creado anteriormentessssss");
+  } else {
+    try {
+      const response = await fetch(`/api/carts/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log()
+      localStorage.setItem('cartId', data._id);
 
-const handleCart = async () => {
-  const response = await fetch("http://localhost:8080/api/carts", {
-    method: "POST",
-  });
-  if (response.status === 201) {
-    const json = await response.json();
-    cart.id = json.payload._id;
-    cart.products = json.payload.products;
-    navCartUrl.href =`http://localhost:8080/carts/${cart.id}`
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
-};
+}
 
-window.onload = handleCart;
+verifyCart();
+
+const cartId = localStorage.getItem('cartId')
+
+console.log(cartId);
+
+addToCartButtons.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const productId = e.target.dataset.productId;
+    async function addProductCart() {
+      try {
+        const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        console.log(data)
+      } catch (error) {
+        console.error("Error:", error);
+      }
+
+    }
+    addProductCart()
+  });
+});

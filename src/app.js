@@ -30,39 +30,91 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// agrego middlewares de express
-app.use(express.json());
+// creamos instancias //
+import mongoose from 'mongoose';
+import express from 'express';
+import { server, app } from './utils/socket.js';
+import handlerbars from 'express-handlebars';
+import cookieParser from 'cookie-parser';
+import MongoStore from 'connect-mongo';
+import session from 'express-session';
+import passport from 'passport';
+// creamos rutas de js //
+import { productRouter } from './routes/products.router.js';
+import { cartRouter } from './routes/carts.router.js';
+import wiewsRouter from './routes/views.router.js';
+import { menssagerModel } from "../src/models/menssage.model.js";
+import { userRouter } from './routes/user.router.js';
+import { ticketRouter } from './routes/ticket.router.js';
+import inicializePassport from './config/passport.config.js';
+import enviroment from './config/enviroment.js';
+
+
+import { io } from './utils/socket.js';
+
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cookieParser("B2zdY3B$pHmxW%"));
 
-initPassport();
-app.use(passport.initialize());
+app.engine('handlebars', handlerbars.engine());
+app.set('views', 'views/');
+app.set('view engine', 'handlebars');
 
-app.use(userMiddleware)
-// setteo el engine
-app.engine("handlebars", handlebars.engine());
-// setteo rutas de archivos estaticos
-app.use(express.static("public"));
-//app.set("views", path.join(__dirname, "..", "/views"));
-app.set("views", "views/");
-app.set("view engine", "handlebars");
+app.use(express.static('public'))
 
 
-// defino las rutas
-app.use("/api/carts", jwtMiddleware, cartsRouter);
-app.use("/api/products", productsRouter);
-app.use("/api/auth", userRouter);
+app.use(cookieParser())
 
-app.use("/", viewsRouter);
 
-// agrego el middleware para el manejo de error
-app.use(errorMiddleware);
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: enviroment.DB_LINK_CREATE,
+      mongoOptions: {
+        useNewUrlParser: true,
+      },
+      ttl: 6000,
+    }),
+    secret: 'B2zdY3B$pHmxW%',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+inicializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
-// conecto a mongoose
-mongoose.connect(process.env.MONGO_URL);
+app.post('/', async (req, res) => {
 
-// levanto al servidor en puerto 8080
-app.listen(8080, () => {
-  console.log("Escuchando en puerto 8080");
+  try {
+
+    const { user, menssage } = req.body;
+    const newMessage = new menssagerModel({ user, menssage });
+    await newMessage.save();
+
+    const messages = await menssagerModel.find({}).lean();
+
+    io.emit('List-Message', {
+      messages: messages
+
+    })
+
+    res.redirect('/chat');
+  } catch (err) {
+    res.render('error', { error: err.message });
+  }
 });
+
+mongoose.connect(
+  enviroment.DB_LINK
+);
+
+app.use('/', wiewsRouter)
+app.use('/api/products', productRouter)
+app.use('/api/carts', cartRouter)
+app.use('/api/users', userRouter);
+app.use('/api/purchase', ticketRouter);
+
+
+const httpServer = enviroment.PORT;
+server.listen(httpServer, () => console.log(`estoy escuchando ${httpServer}...`));

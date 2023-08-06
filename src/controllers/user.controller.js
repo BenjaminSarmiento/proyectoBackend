@@ -1,47 +1,30 @@
-import CustomError from "../utils/CustomError.utils.js";
-import * as userService from "../services/user.service.js";
-import generateToken from "../utils/jwt.utils.js";
-import asPOJO from "../utils/asPOJO.utils.js";
+import UserService from "../service/user.service.js";
+import userDao from "../daos/dao.mongo/user.dao.js";
 
-export const register = async (req, res, next) => {
-  try {
-    const { first_name, last_name, age, email, password, img } = req.body;
-    if (!email || !password)
-      throw new CustomError(400, "Email and password are required");
-    const userData = { first_name, last_name, age, email, password, img };
-    const user = await userService.register(userData);
-    res.status(201).send({ status: "success", payload: user });
-  } catch (error) {
-    next(error);
-  }
-};
 
-export const login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password)
-      throw new CustomError(400, "Credentials are missing");
-    const user = await userService.login(email, password);
-    const token = generateToken(user);
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        maxAge: 3600000,
-      })
-      .status(201)
-      .send({ status: "success", payload: "user logged in" });
-  } catch (error) {
-    next(error);
-  }
-};
-export const logout = async (req, res, next) => {
-  if (req.cookies.token) res.clearCookie("token");
-  res.redirect("/");
-};
+class UserController {
+    constructor() {
+        this.service = new UserService(userDao);
+    }
 
-export const current = async (req, res, next) => {
-  let user = asPOJO(req.user);
-  delete user.password;
-  delete user.__v;
-  res.status(200).send({ status: "success", payload: user });
-};
+    async getAll() {
+        return await this.service.getAll();
+    }
+
+    async getByEmail(email) {
+        return await this.service.getByEmail(email);
+    }
+
+    async createUser(userData) {
+        return await this.service.createUser(userData);
+    }
+
+    async getUserById(id) {
+        return await this.service.getUserById(id);
+    }
+
+}
+
+const userController = new UserController;
+
+export default userController;

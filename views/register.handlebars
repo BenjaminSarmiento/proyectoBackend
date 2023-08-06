@@ -1,45 +1,30 @@
-<h1>Register form</h1>
-<div class="container">
-    <form id="registerForm" onsubmit="handleSignup">
-        <div class="row mb-3">
-            <label for="email" class="col-sm-2 col-form-label">Email</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" name="email" id="email">
-            </div>
-        </div>  
-        <div class="row mb-3">
-            <label for="password" class="col-sm-2 col-form-label">Password</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" name="password" id="password">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label for="first_name" class="col-sm-2 col-form-label">First Name</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="first_name" id="first_name">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label for="last_name" class="col-sm-2 col-form-label">Last Name</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="last_name" id="last_name">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label for="age" class="col-sm-2 col-form-label">Age</label>
-            <div class="col-sm-10">
-                <input type="number" class="form-control" name="age" id="age">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label for="img" class="col-sm-2 col-form-label">Thumbnail</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="img" id="img">
-            </div>
-        </div>         
-        <button type="submit" class="btn btn-primary">Register</button>  
-    </form>
-    <div id="error"></div>
-</div>
+<div class="container-register">
+     <h1>Registrate aqui </h1>
+   
+    <form action='/api/users/' method='post' class="row g-3">
 
-<script src="/js/register.js"></script>
+        <div class="col-md-6">
+            <label for="Nombre" class="form-label">Nombre</label>
+            <input type="Nombre" class="form-control" name='first_name' id="Nombre">
+        </div>
+
+        <div class="col-md-6">
+            <label for="Apellido" class="form-label">Apellido</label>
+            <input type="Apellido" class="form-control" name='last_name' id="Apellido">
+        </div>
+        <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name='email' id="email">
+        </div>
+        <div class="col-md-6">
+             <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" name='password' id="password">
+        </div>
+        <div class="col-md-6">
+            <label for="img" class="form-label">Link de tu foto de perfil</label>
+            <input type="text" class="form-control" name="img">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </div>
+    </form>

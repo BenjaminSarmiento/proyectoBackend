@@ -1,83 +1,104 @@
-let cart = {};
-const cartInfo = document.getElementById("cartInfo");
-const checkout = document.getElementById("checkout");
-const cid = document.getElementById("cid").innerText;
-const navCartUrl = document.getElementById("navCartUrl");
+const cartId = localStorage.getItem('cartId');
 
-const handleCheckout = async () => {
-  const response = await fetch(
-    `http://localhost:8080/api/carts/checkout/${cart.id}`,
-    { method: "POST" }
-  );
-  const json = await response.json();
-  if (json.status === "success") alert("Cart facturada");
-  handleCart();
-};
+async function mostrarCarrito() {
+  if (cartId !== null) {
+    try {
+      const response = await fetch(`/api/carts/${cartId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data)
+      const cartHtml = document.getElementById('mostrarCart');
+      cartHtml.innerHTML = '';
+     const cartElement = document.createElement('div');
+      const total = data.products.reduce((acc, product) => acc + product.product.price * product.quantity, 0);
+      cartElement.innerHTML = `
+      
+          <ul>
+            ${data.products.map((product) => `
+           
+              <li>
+              <img class="img-product" src="${product.product.thumbnail}}" alt="">
+                <p class="title"> ${product.product.title}</p>
+                <p>Cantidad: ${product.quantity}</p>
+                <p>Precio: ${product.product.price * product.quantity}</p>   
+                <button class="btn btn-sm btn-success removeProduct" data-product-id="${product.product._id}">Eliminar</button>
+              </li>
+            `).join('')}
+          </ul>
+          <p class="totalPrice">Total: ${total}</p>
+          <button class="btn btn-sm btn-success succesCartClient">Confirmar Compra</button>
+       `;
+      cartHtml.appendChild(cartElement);
 
-checkout.onclick = handleCheckout;
 
-const substractOne = async (prodId) => {
-  const quantity = document.getElementById(`quantity-${prodId}`);
-  let qty = parseInt(quantity.innerText);
-  if (qty > 1) {
-    qty--;
-    const response = await fetch(
-      `http://localhost:8080/api/carts/${cart.id}/products/${prodId}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity: qty }),
-      }
-    );
-    const json = await response.json();
-    if (json.status === "success") quantity.innerText = qty;
-  }
-  handleCart();
-};
-const addOne = async (prodId) => {
-  const quantity = document.getElementById(`quantity-${prodId}`);
-  let qty = parseInt(quantity.innerText);
-  qty++;
-  const response = await fetch(
-    `http://localhost:8080/api/carts/${cart.id}/products/${prodId}`,
-    {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quantity: qty }),
+
+
+      const removeProductCart = document.querySelectorAll(".removeProduct");
+
+      removeProductCart.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const productId = e.target.dataset.productId;
+          const cartId = localStorage.getItem('cartId');
+
+          async function deleteProductCart() {
+            try {
+              const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              const data = await response.json();
+              console.log(data)
+              location.reload();
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          }
+          deleteProductCart()
+        });
+      });
+
+
+      const succesCart = document.querySelectorAll(".succesCartClient");
+
+      succesCart.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          async function purchase() {
+            try {
+              const response = await fetch(`/api/purchase/${cartId}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              const data = await response.json();
+              console.log(data)
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          }
+          purchase()
+        });
+      });
+
+
+
+
+
+
+    } catch (error) {
+      console.error("Error:", error);
     }
-  );
-  const json = await response.json();
-  if (json.status === "success") quantity.innerText = qty;
-  handleCart();
-};
-const removeProd = async (prodId) => {
-  const response = await fetch(
-    `http://localhost:8080/api/carts/${cart.id}/products/${prodId}`,
-    {
-      method: "DELETE",
-    }
-  );
-  const json = await response.json();
-  if (json.status === "success") {
-    const cartItem = document.getElementById(`cart-${prodId}`);
-    cartItem.remove();
-  }
-  handleCart();
-};
 
-const handleCart = async () => {
-  const response = await fetch("http://localhost:8080/api/carts", {
-    method: "POST",
-  });
-  if (response.status === 201) {
-    const json = await response.json();
-    cart.id = json.payload._id;
-    cart.products = json.payload.products;
-    if (cart.products.length === 0) {
-      cartInfo.innerHTML = `<h2 id="empty-cart">Your cart is empty...</h2><h1><a href="http://localhost:8080/products">Go shopping!</a></h1>`;
-    }
-    navCartUrl.href = `http://localhost:8080/carts/${cart.id}`;
+  } else {
+    console.log("No hay productos en el carrito")
   }
-};
 
-window.onload = handleCart;
+}
+
+mostrarCarrito()

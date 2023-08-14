@@ -1,24 +1,24 @@
 export default class UserService {
-  constructor(dao) {
-      this.dao = dao;
-  }
+    constructor(dao) {
+        this.dao = dao;
+    }
 
-  getAll() {
-      return this.dao.getAll();
-  }
+    getAll() {
+        return this.dao.getAll();
+    }
 
-  getByEmail(email) {
-      return this.dao.getByEmail(email);
-  }
+    getByEmail(email) {
+        return this.dao.getByEmail(email);
+    }
 
-  createUser(userData) {
-  
+    createUser(userData) {
+    
 
-      return this.dao.createUser(userData);
-  }
+        return this.dao.createUser(userData);
+    }
 
-  getUserById(id) {
-      return this.dao.getUserById(id); 
-  }
+    getUserById(id) {
+        return this.dao.getUserById(id); 
+    }
 
 }

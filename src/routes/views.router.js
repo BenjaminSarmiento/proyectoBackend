@@ -1,17 +1,13 @@
 import { Router } from "express";
 import productController from "../controllers/product.controller.js";
 import { isAuth, isGuest } from '../middleware/auth.middleware.js';
-import { middlewarePassportJwt } from "../middleware/jwt.middleware.js";
-
+import { authToken, middlewarePassportJwt } from "../middleware/jwt.middleware.js";
+ 
 
 const wiewsRouter = Router()
 
 
-wiewsRouter.get('/profile', middlewarePassportJwt, isAuth, (req, res) => {
-
-  if (!req.user) {
-    res.redirect('/errorcaduco')
-  }
+wiewsRouter.get('/profile', middlewarePassportJwt, async (req, res) => {
 
   res.render('profile', {
     title: 'Perfil de Usuario',
@@ -20,23 +16,31 @@ wiewsRouter.get('/profile', middlewarePassportJwt, isAuth, (req, res) => {
   });
 });
 
-wiewsRouter.get('/', isGuest, (req, res) => {
+wiewsRouter.get('/', (req, res) => {
   res.render('register', {
     title: 'Registrar Nuevo Usuario',
   });
 });
 
-wiewsRouter.get('/login', isGuest, (req, res) => {
+
+wiewsRouter.get('/login', (req, res) => {
   res.render('login', {
     title: 'Inicio de Sesión',
   });
 });
 
-wiewsRouter.get('/registererror', isGuest, (req, res) => {
-  res.render('registererror', {
-    title: 'Error en registro',
+wiewsRouter.get('/dataerror', isGuest, (req, res) => {
+  res.render('dataerror', {
+    title: 'Error en en datos ingresados',
   });
 });
+
+wiewsRouter.get('/errorexistsuser', isGuest, (req, res) => {
+  res.render('errorexistsuser', {
+    title: 'EL usuario ya existe',
+  });
+});
+
 
 wiewsRouter.get('/errorservidor', isGuest, (req, res) => {
   res.render('errorservidor', {
@@ -50,21 +54,21 @@ wiewsRouter.get('/errorcaduco', isGuest, (req, res) => {
   });
 });
 
-wiewsRouter.get('/mail', async(req, res) =>{
-  let result = await trasn
-})
 
 
-wiewsRouter.get('/index', middlewarePassportJwt, isAuth, async (req, res) => {
+wiewsRouter.get('/index', middlewarePassportJwt, async (req, res) => {
   const { limit = 4, page = 1, sort, descripcion, availability } = req.query;
 
   try {
+    // const products = generateProducts(page, limit, sort, descripcion, availability)
 
     const result = await productController.getProducts(limit, page, sort, descripcion, availability);
-    const pag = result.page;
+    const pag = result.pag;
     const prevPage = result.prevPage;
     const nextPage = result.nextPage;
     const totalPages = result.totalPages;
+
+
 
     const prevLink =
       prevPage &&
@@ -79,36 +83,33 @@ wiewsRouter.get('/index', middlewarePassportJwt, isAuth, async (req, res) => {
       }&descripcion=${encodeURIComponent(descripcion || "")}${availability ? `&availability=${availability}` : ""
       }`;
 
-    //mapeo para evitar el Object.object
+
     const products = result.docs.map((product) => product.toObject());
-    res.render("index", { title: "Products", products, prevLink, pag, totalPages, nextLink, user: req.user, });
+
+    res.render("index", { title: "Products", products, products, pag, prevLink, totalPages, nextLink, user: req.user, });
   } catch (error) {
     res.status(500).send(`No se pudieron obtener los productos`);
   }
 });
 
 
+wiewsRouter.get('/chat', middlewarePassportJwt, isAuth, (req, res) => {
 
-
-wiewsRouter.get('/chat', middlewarePassportJwt, (req, res) => {
- 
- 
   res.render('chat', { user: req.user });
 
 });
 
 
-wiewsRouter.get('/carts/', middlewarePassportJwt, isAuth, async (req, res) => {
+wiewsRouter.get('/carts/', middlewarePassportJwt, async (req, res) => {
 
-  res.render('cart',  { user: req.user }); 
+  res.render('cart', { user: req.user });
 });
 
 
 wiewsRouter.post('/', middlewarePassportJwt, isGuest, async (req, res) => {
   const id = req.params.id
-  console.log(id)
-  res.render('purchase',  { user: req.user }); 
+  res.render('purchase', { user: req.user });
 });
 
 
-export default wiewsRouter  
+export default wiewsRouter

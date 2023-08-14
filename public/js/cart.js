@@ -1,3 +1,7 @@
+
+
+
+
 const cartId = localStorage.getItem('cartId');
 
 async function mostrarCarrito() {
@@ -10,16 +14,16 @@ async function mostrarCarrito() {
         },
       });
       const data = await response.json();
-      console.log(data)
+   
       const cartHtml = document.getElementById('mostrarCart');
       cartHtml.innerHTML = '';
-     const cartElement = document.createElement('div');
+      const cartElement = document.createElement('div');
       const total = data.products.reduce((acc, product) => acc + product.product.price * product.quantity, 0);
       cartElement.innerHTML = `
-      
+         <h1>TUS PRODUCTOS</h1>
           <ul>
             ${data.products.map((product) => `
-           
+             
               <li>
               <img class="img-product" src="${product.product.thumbnail}}" alt="">
                 <p class="title"> ${product.product.title}</p>
@@ -52,14 +56,16 @@ async function mostrarCarrito() {
                   "Content-Type": "application/json",
                 },
               });
+
               const data = await response.json();
-              console.log(data)
-              location.reload();
+
             } catch (error) {
               console.error("Error:", error);
             }
           }
+          location.reload();
           deleteProductCart()
+
         });
       });
 
@@ -77,26 +83,33 @@ async function mostrarCarrito() {
                 },
               });
               const data = await response.json();
-              console.log(data)
             } catch (error) {
               console.error("Error:", error);
             }
           }
           purchase()
+
+          localStorage.clear();
+          location.reload();
         });
       });
-
-
-
-
-
 
     } catch (error) {
       console.error("Error:", error);
     }
 
   } else {
-    console.log("No hay productos en el carrito")
+
+
+    const cartHtml = document.getElementById('noproduct');
+    cartHtml.innerHTML = '';
+    const cartElement = document.createElement('div');
+    cartElement.innerHTML = `
+  
+       <h1 class=""> NO HAY PRODUCTOS EN EL CARRITO</h1>
+    
+     `;
+    cartHtml.appendChild(cartElement);
   }
 
 }

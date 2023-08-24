@@ -1,4 +1,7 @@
 import ticketModel from "../../models/ticket.model.js";
+import { generateErrorTicket } from "../../utils/info.js";
+import ErrorCodes from "../../utils/error.js";
+import CustomErrors from "../../utils/customError.js";
 
 class TicketDao {
     constructor() {
@@ -10,8 +13,8 @@ class TicketDao {
         try {
             const createTicket = this.ticket.create(ticket)
             return createTicket;
-        } catch (error) {
-            console.log('No se pudo crear el ticket', error)
+        } catch (err) {
+            CustomErrors.createError('No se pudo crear el ticket', generateErrorTicket({ err }), 'Error Create Ticket', ErrorCodes.TICKET_ERROR)
         }
     }
 
@@ -19,8 +22,9 @@ class TicketDao {
         try {
             const getticket = this.ticket.find({})
             return getticket;
-        } catch (error) {
-            console.log('Error a traer los ticket', error)
+        } catch (err) {
+            CustomErrors.createError('Error a traer los ticket', generateErrorTicket({ err }), 'Error Get Tickets', ErrorCodes.TICKET_ERROR)
+
         }
     }
 
@@ -28,8 +32,8 @@ class TicketDao {
         try {
             const ticketid = this.ticket.findById(id)
             return ticketid;
-        } catch (error) {
-            console.log('No se pudo obtener el ticket', error)
+        } catch (err) {
+            CustomErrors.createError('No se pudo obtener el ticket', generateErrorTicket({ err }), 'Error Get Ticket ID', ErrorCodes.TICKET_ERROR)
         }
 
     }
@@ -38,8 +42,8 @@ class TicketDao {
         try {
             const deleteTicket = this.ticket.deleteOne(id)
             return deleteTicket;
-        } catch (error) {
-            console.log('No se pudo eliminar el ticket', error)
+        } catch (err) {
+            CustomErrors.createError('No se pudo eliminar el ticket', generateErrorTicket({ err }), 'Error Delete Ticket ID', ErrorCodes.TICKET_ERROR)
         }
 
     }

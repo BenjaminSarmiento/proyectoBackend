@@ -7,7 +7,7 @@ import { menssagerModel } from '../models/menssage.model.js';
 export const app = express();
 export const server = http.createServer(app);
 export const io = new Server(server);
-
+// creamos aqui tambien
 
 io.on('connection', async (socket) => {
 	console.log('Cliente conectado');
@@ -23,4 +23,4 @@ io.on('connection', async (socket) => {
 	socket.on('disconnect', () => {
 		console.log('Cliente desconectado');
 	});
-});
+});	

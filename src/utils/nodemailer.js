@@ -6,6 +6,6 @@ export const transporter = nodmailer.createTransport({
     port: 465,
     auth: {
         user: 'benjaminsarmiento03@gmail.com',
-        pass: 'kjvzuthxqbpdmxny',
+        pass: 'jsoabyempdgyqnct',
     },
 })

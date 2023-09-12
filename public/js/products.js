@@ -3,7 +3,6 @@ const existingCartId = localStorage.getItem('cartId');
 
 async function verifyCart() {
   if (existingCartId !== null) {
-    console.log(existingCartId, "el cart creado anteriormentessssss");
   } else {
     try {
       const response = await fetch(`/api/carts/`, {
@@ -23,8 +22,8 @@ async function verifyCart() {
 
 verifyCart();
 
-const cartId = localStorage.getItem('cartId')
 
+const cartId = localStorage.getItem('cartId')
 
 addToCartButtons.forEach((btn) => {
   btn.addEventListener("click", (e) => {
@@ -35,9 +34,40 @@ addToCartButtons.forEach((btn) => {
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      const data = await response.json();
+      })
+      .then(response => {
+        if (response.ok) {
+          swal("¡La haz agregado a tu carrito! ", ` `, "success")
+        } else {
+          swal("¡No estas autorizado! ", "¡No puedes comprar tus propios productos! ", "warning");
+        }
+      })
     }
     addProductCart()
+  });
+});
+
+
+const deleteProducttButtons = document.querySelectorAll(".deleteProduct");
+
+deleteProducttButtons.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const productId = e.target.dataset.productId;
+    async function deleteProductCart() {
+      const response = await fetch(`/api/products/${productId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(response => {
+          if (response.ok) {
+            swal("¡Haz Eliminado tu producto! ", ` ¡Ya no existe en tu tienda! `, "success");
+          } else {
+            swal("¡No estas autorizado! ", " ...¡No puedes eliminar productos que no son tuyos! ", "warning");
+          }
+        })
+    }
+    deleteProductCart()
   });
 });
